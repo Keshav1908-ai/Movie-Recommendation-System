@@ -43,6 +43,31 @@ body {
   margin-bottom: 4rem;
   padding-bottom: 2rem;
   border-bottom: 1px solid rgba(255,255,255,0.1);
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.header-left, .header-right {
+  display: flex;
+  align-items: center;
+}
+
+.api-key-input {
+  background: rgba(25, 25, 35, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  width: 220px;
+  transition: all 0.3s;
+}
+
+.api-key-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 10px rgba(94, 23, 235, 0.3);
 }
 
 .logo {

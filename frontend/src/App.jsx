@@ -1,6 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
+const MoviePoster = ({ movie, tmdbApiKey }) => {
+  const [posterUrl, setPosterUrl] = useState(null);
+
+  useEffect(() => {
+    if (!tmdbApiKey || !movie.tmdbId) {
+        setPosterUrl(null);
+        return;
+    }
+    
+    let isMounted = true;
+    fetch(`https://api.themoviedb.org/3/movie/${movie.tmdbId}?api_key=${tmdbApiKey}`)
+      .then(res => res.json())
+      .then(data => {
+        if (isMounted && data.poster_path) {
+          setPosterUrl(`https://image.tmdb.org/t/p/w500${data.poster_path}`);
+        }
+      })
+      .catch(err => console.error("Error fetching TMDB poster:", err));
+
+    return () => { isMounted = false; };
+  }, [movie.tmdbId, tmdbApiKey]);
+
+  if (posterUrl) {
+    return <img src={posterUrl} alt={movie.title} className="real-poster" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }} />;
+  }
+  
+  return <div className="poster-placeholder">{movie.title.charAt(0)}</div>;
+};
+
 // Using a premium dark theme approach
 function App() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -8,6 +37,13 @@ function App() {
   const [recommendations, setRecommendations] = useState([]);
   const [recommendedFor, setRecommendedFor] = useState('');
   const [loading, setLoading] = useState(false);
+  const [tmdbApiKey, setTmdbApiKey] = useState(localStorage.getItem('tmdbApiKey') || '');
+
+  const handleApiKeyChange = (e) => {
+    const val = e.target.value;
+    setTmdbApiKey(val);
+    localStorage.setItem('tmdbApiKey', val);
+  };
 
   // Fetch recommendations for a default movie on load
   useEffect(() => {
@@ -52,7 +88,9 @@ function App() {
   return (
     <div className="app-container">
       <header className="header">
-        <h1 className="logo">CineMatch <span>AI</span></h1>
+        <div className="header-left">
+            <h1 className="logo">CineMatch <span>AI</span></h1>
+        </div>
         <form onSubmit={handleSearch} className="search-form">
           <input
             type="text"
@@ -63,6 +101,16 @@ function App() {
           />
           <button type="submit" className="search-btn">Search</button>
         </form>
+        <div className="header-right">
+            <input 
+              type="password" 
+              placeholder="TMDB API Key" 
+              value={tmdbApiKey} 
+              onChange={handleApiKeyChange}
+              className="api-key-input"
+              title="Enter a TMDB API Key to unlock real movie posters and metadata"
+            />
+        </div>
       </header>
 
       <main className="main-content">
@@ -75,8 +123,7 @@ function App() {
               {searchResults.map(movie => (
                 <div key={`search-${movie.id}`} className="movie-card" onClick={() => fetchRecommendations(movie.title)}>
                   <div className="movie-poster">
-                    {/* Placeholder for real images */}
-                    <div className="poster-placeholder">{movie.title.charAt(0)}</div>
+                    <MoviePoster movie={movie} tmdbApiKey={tmdbApiKey} />
                   </div>
                   <div className="movie-info">
                     <h3>{movie.title}</h3>
@@ -95,11 +142,11 @@ function App() {
               {recommendations.map(movie => (
                 <div key={`rec-${movie.id}`} className="movie-card">
                   <div className="movie-poster">
-                    <div className="poster-placeholder rec-placeholder">{movie.title.charAt(0)}</div>
+                    <MoviePoster movie={movie} tmdbApiKey={tmdbApiKey} />
                   </div>
                   <div className="movie-info">
                     <h3>{movie.title}</h3>
-                    <p className="genres">{movie.genres}</p>
+                    <p className="genres">{movie.genres.split('|').join(' • ')}</p>
                     <button className="watch-btn">Watch Trailer</button>
                   </div>
                 </div>
