@@ -1,0 +1,5 @@
+/* Removed default vite styles that conflict with our premium dark theme */
+body {
+  margin: 0;
+  display: block;
+}

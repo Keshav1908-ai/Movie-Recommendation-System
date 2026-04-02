@@ -1,0 +1,16 @@
+movieId,title,genres
+1,The Dark Knight,Action|Crime|Drama|Thriller
+2,Inception,Action|Adventure|Sci-Fi|Thriller
+3,The Shawshank Redemption,Crime|Drama
+4,The Godfather,Crime|Drama
+5,Pulp Fiction,Comedy|Crime|Drama|Thriller
+6,Forrest Gump,Comedy|Drama|Romance
+7,The Matrix,Action|Sci-Fi
+8,Interstellar,Adventure|Drama|Sci-Fi
+9,Parasite,Comedy|Drama|Thriller
+10,Gladiator,Action|Adventure|Drama
+11,The Avengers,Action|Adventure|Sci-Fi
+12,Spider-Man: Into the Spider-Verse,Action|Animation|Adventure|Sci-Fi
+13,Joker,Crime|Drama|Thriller
+14,Titanic,Drama|Romance
+15,Jurassic Park,Action|Adventure|Sci-Fi
